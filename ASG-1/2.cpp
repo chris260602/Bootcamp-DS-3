@@ -9,67 +9,52 @@ struct node {
 
 node* createnode(int value) {
     node* temp = (node*)malloc(sizeof(node));
-    temp->next = NULL;
     temp->value = value;
+    temp->next = NULL;
     return temp;
 }
 
 void push(int value) {
     node* temp = createnode(value);
     if (!head) {
-        head = temp;
+        head = tail = temp;
     }
     else {
-        node* curr = head;
-        while (curr->next && curr->next != head) {
-            curr = curr->next;
-        }
-        curr->next = temp;
         temp->next = head;
+        head = temp;
     }
 }
 
-void print() {
-    node* temp = head;
-    do {
-        if (temp->next == head) {
-            printf("%d\n", temp->value);
-        }
-        else {
-            printf("%d -> ", temp->value);
-        }
+int max(node* curr) {
+    int max = 0;
+    node* temp = curr;
+    while (temp) {
+        max = temp->value > max ? temp->value : max;
         temp = temp->next;
-    } while (temp && temp != head);
+    }
+    return max;
 }
 
-bool circular(node* target) {
-    if (!head) {
-        return false;
+int min(node* curr) {
+    int min = curr->value;
+    node* temp = curr;
+    while (temp) {
+        min = temp->value < min ? temp->value : min;
+        temp = temp->next;
     }
-    node* temp1 = head;
-    node* temp2 = head;
-    while (temp1 && temp2 && temp1->next && temp2->next->next) {
-        temp1 = temp1->next;
-        temp2 = temp2->next->next;
-        if (temp1 == temp2) {
-            return true;
-        }
-    }
-    return false;
+    return min;
 }
-
 
 int main() {
     push(10);
     push(20);
     push(30);
     push(40);
-    print();
-    if (circular(head) == true) {
-        puts("Circular");
-    }
-    else {
-        puts("Not Circular");
-    }
+    push(50);
+    int Minvalue = min(head);
+    int Maxvalue = max(head);
+    printf("The range is %d\n", Maxvalue - Minvalue);
+
+
     return 0;
 }
